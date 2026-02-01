@@ -1,1 +1,6 @@
-reference/
+.claude/
+.env
+.vite/
+.pnpm-store/
+dist/
+node_modules/

@@ -1,0 +1,27 @@
+{
+	"name": "shards",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@bcts/components": "1.0.0-alpha.19",
+		"@bcts/dcbor": "1.0.0-alpha.19",
+		"@bcts/envelope": "1.0.0-alpha.19",
+		"@scure/bip39": "2.0.1",
+		"bootstrap": "5.3.3",
+		"jspdf": "3.0.3",
+		"qr": "0.5.4",
+		"qr-scanner": "1.4.2",
+		"solid-js": "1.9.11",
+		"svg2pdf.js": "2.7.0"
+	},
+	"devDependencies": {
+		"vite": "npm:rolldown-vite@latest",
+		"vite-plugin-solid": "^2.11.8"
+	}
+}
