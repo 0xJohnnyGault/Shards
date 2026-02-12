@@ -3,7 +3,20 @@ const BUILD_ID = new URL(self.location.href).searchParams.get('build') || 'dev'
 const CACHE_NAME = `${CACHE_PREFIX}${BUILD_ID}`
 const BASE_PATH = new URL(self.registration.scope).pathname
 const APP_SHELL = `${BASE_PATH}index.html`
-const PRECACHE_ASSETS = [BASE_PATH, APP_SHELL, `${BASE_PATH}fonts/RobotoMono-Regular.ttf`, `${BASE_PATH}manifest.json`]
+const PRECACHE_ASSETS = [
+	BASE_PATH,
+	APP_SHELL,
+	`${BASE_PATH}fonts/RobotoMono-Regular.ttf`,
+	`${BASE_PATH}manifest.json`,
+	`${BASE_PATH}app-icon.svg`,
+	`${BASE_PATH}favicon.svg`,
+	`${BASE_PATH}favicon.ico`,
+	`${BASE_PATH}favicon-16x16.png`,
+	`${BASE_PATH}favicon-32x32.png`,
+	`${BASE_PATH}apple-touch-icon.png`,
+	`${BASE_PATH}icon-192.png`,
+	`${BASE_PATH}icon-512.png`,
+]
 const PRECACHE_PATHS = new Set(PRECACHE_ASSETS.map((asset) => new URL(asset, self.location.origin).pathname))
 const STATIC_DESTINATIONS = new Set(['style', 'script', 'font', 'image', 'worker'])
 

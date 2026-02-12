@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Shards app icon">
+  <defs>
+    <g id="tile">
+      <rect width="124" height="124" rx="6" fill="#1CC7E6" />
+    </g>
+  </defs>
+
+  <rect x="70" y="70" width="884" height="884" rx="92" fill="#050A1A" />
+  <rect x="70" y="70" width="884" height="884" rx="92" fill="none" stroke="#10C0EB" stroke-opacity="0.36" stroke-width="6" />
+
+  <g>
+    <use href="#tile" x="183" y="183" />
+    <use href="#tile" x="361" y="183" />
+    <use href="#tile" x="539" y="183" />
+    <use href="#tile" x="717" y="183" />
+
+    <use href="#tile" x="183" y="361" />
+    <use href="#tile" x="539" y="361" />
+    <use href="#tile" x="717" y="361" />
+
+    <use href="#tile" x="183" y="539" />
+    <use href="#tile" x="361" y="539" />
+    <use href="#tile" x="717" y="539" />
+
+    <use href="#tile" x="183" y="717" />
+    <use href="#tile" x="361" y="717" />
+    <use href="#tile" x="539" y="717" />
+    <use href="#tile" x="717" y="717" />
+  </g>
+</svg>

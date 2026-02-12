@@ -5,6 +5,7 @@ import { wordlist } from '@scure/bip39/wordlists/english.js'
 let shardingDepsPromise
 let qrScannerPromise
 let pdfDepsPromise
+const APP_ICON_SRC = `${import.meta.env.BASE_URL}app-icon.svg`
 
 async function getShardingDeps() {
 	if (!shardingDepsPromise) {
@@ -980,7 +981,7 @@ export default function App() {
 		<div>
 			<header class="app-header d-flex justify-content-between align-items-center mb-4 pb-3">
 				<div class="d-flex align-items-center gap-3">
-					<span class="app-icon">🔐</span>
+					<img class="app-icon" src={APP_ICON_SRC} alt="" aria-hidden="true" />
 					<div>
 						<div class="app-title">Shards</div>
 						<div class="app-subtitle">Gordian Envelope SSKR Manager</div>
