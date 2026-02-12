@@ -62,6 +62,38 @@ async function generateQRCode(data) {
 	return encodeQR(data, 'svg')
 }
 
+function normalizeAppUrl(rawValue) {
+	const value = typeof rawValue === 'string' ? rawValue.trim() : ''
+	if (!value) return null
+	try {
+		const url = new URL(value)
+		url.hash = ''
+		return url.toString()
+	} catch {
+		return null
+	}
+}
+
+function getDeployedAppUrl() {
+	const envValue = typeof import.meta !== 'undefined' && import.meta.env && typeof import.meta.env.VITE_APP_URL === 'string' ? import.meta.env.VITE_APP_URL : ''
+	const envUrl = normalizeAppUrl(envValue)
+	if (envValue && !envUrl) {
+		console.warn('Ignoring invalid VITE_APP_URL. Falling back to current origin and base path.')
+	}
+	if (envUrl) return envUrl
+
+	if (typeof window !== 'undefined' && window.location) {
+		const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/'
+		try {
+			return new URL(baseUrl, window.location.origin).toString()
+		} catch {
+			return window.location.origin
+		}
+	}
+
+	return null
+}
+
 function ResetCacheButton() {
 	const [isResetting, setIsResetting] = createSignal(false)
 
@@ -670,6 +702,8 @@ export default function App() {
 		})
 
 		await loadRobotoMono(pdf)
+		const appUrl = getDeployedAppUrl()
+		const appUrlQr = appUrl ? await generateQRCode(appUrl) : null
 
 		const pageWidth = pdf.internal.pageSize.getWidth()
 		const pageHeight = pdf.internal.pageSize.getHeight()
@@ -747,6 +781,35 @@ export default function App() {
 			pdf.text(urLines, margin + 3, yPos + 5)
 			pdf.setCharSpace(0)
 			yPos += urHeight + 10
+
+			if (appUrl && appUrlQr) {
+				const footerY = pageHeight - margin
+				const appSectionHeight = 24
+				const appQrSize = 16
+				const appSectionY = footerY - appSectionHeight - 8
+				const appTextWidth = contentWidth - appQrSize - 14
+				const appQrX = margin + contentWidth - appQrSize - 4
+				const appQrY = appSectionY + (appSectionHeight - appQrSize) / 2
+
+				pdf.setFillColor(252, 252, 252)
+				pdf.rect(margin, appSectionY, contentWidth, appSectionHeight, 'F')
+				pdf.setDrawColor(220, 220, 220)
+				pdf.rect(margin, appSectionY, contentWidth, appSectionHeight, 'S')
+
+				pdf.setFontSize(9)
+				pdf.setFont('helvetica', 'bold')
+				pdf.text('Open Shards App:', margin + 4, appSectionY + 6)
+				pdf.setFontSize(8)
+				pdf.setFont('helvetica', 'normal')
+				const appUrlLines = pdf.splitTextToSize(appUrl, appTextWidth)
+				pdf.text(appUrlLines, margin + 4, appSectionY + 11)
+
+				const renderedAppQr = await addSvgToPdf(pdf, appUrlQr, appQrX, appQrY, appQrSize)
+				if (!renderedAppQr) {
+					const appQrDataUrl = await svgToHighResDataUrl(appUrlQr, 512)
+					pdf.addImage(appQrDataUrl, 'PNG', appQrX, appQrY, appQrSize, appQrSize)
+				}
+			}
 
 			pdf.setFontSize(9)
 			pdf.setFont('helvetica', 'italic')

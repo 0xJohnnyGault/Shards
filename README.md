@@ -51,6 +51,20 @@ pnpm install
 pnpm run dev
 ```
 
+### Configure App URL for PDF Backlinks
+
+Set `VITE_APP_URL` to the deployed web app URL. This URL is printed on each shard PDF and encoded as a QR code so users can return to the app.
+
+```bash
+cp .env.example .env
+```
+
+```env
+VITE_APP_URL=https://shards.example.com/
+```
+
+If `VITE_APP_URL` is not set, the app falls back to `window.location.origin + import.meta.env.BASE_URL`.
+
 ## Build
 
 ```bash
