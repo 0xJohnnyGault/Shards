@@ -11,6 +11,7 @@ A Progressive Web App for splitting and reconstructing BIP-39 seed phrases using
 - **QR code scanning** to import shards via camera
 - **Offline-capable** - works without internet after initial load
 - **Mobile-friendly** - responsive design with Bootstrap 5
+- **Blockchain Commons** - Uses well-documented specifications from [Blockchain Commons](https://developer.blockchaincommons.com) for long-term viability.
 
 ## Envelope Structure
 

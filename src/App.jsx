@@ -199,30 +199,30 @@ function WordInput(props) {
 		return cls
 	}
 
-		return (
-			<div class="position-relative">
-				<div class="input-group input-group-sm">
-					<span class="input-group-text" style={{ width: '2.5rem', 'justify-content': 'center' }}>
-						{indexValue() + 1}
-					</span>
-					<input
-						type="text"
-						class={inputClass()}
-						value={value()}
-						onInput={handleInput}
-						onBeforeInput={handleBeforeInput}
-						onPaste={handlePaste}
-						onKeyDown={handleKeyDown}
-						onBlur={handleBlur}
-						onFocus={handleFocus}
-						placeholder="..."
-						autocomplete="off"
-						autocapitalize="none"
-						spellcheck={false}
-					/>
-				</div>
-				{showDropdown() && (
-					<div class="autocomplete-dropdown">
+	return (
+		<div class="position-relative">
+			<div class="input-group input-group-sm">
+				<span class="input-group-text" style={{ width: '2.5rem', 'justify-content': 'center' }}>
+					{indexValue() + 1}
+				</span>
+				<input
+					type="text"
+					class={inputClass()}
+					value={value()}
+					onInput={handleInput}
+					onBeforeInput={handleBeforeInput}
+					onPaste={handlePaste}
+					onKeyDown={handleKeyDown}
+					onBlur={handleBlur}
+					onFocus={handleFocus}
+					placeholder="..."
+					autocomplete="off"
+					autocapitalize="none"
+					spellcheck={false}
+				/>
+			</div>
+			{showDropdown() && (
+				<div class="autocomplete-dropdown">
 					<For each={suggestions()}>
 						{(word, i) => (
 							<div class={`autocomplete-item ${i() === selectedIndex() ? 'active' : ''}`} onMouseDown={() => selectWord(word)}>
@@ -847,7 +847,7 @@ export default function App() {
 					<section class="text-center hero-section mb-5">
 						<h1 class="hero-title mb-3">Shards</h1>
 						<p class="hero-subtitle mb-3">Gordian Envelope SSKR Manager</p>
-						<p class="hero-copy">Securely split your seed phrase into shares and reconstruct it only when you have enough fragments - powered by battle-tested SSKR.</p>
+						<p class="hero-copy">Securely split your seed phrase plus a private note into shares and reconstruct it only when you have enough fragments.</p>
 					</section>
 
 					<section class="row g-4 g-lg-5">
@@ -916,21 +916,21 @@ export default function App() {
 					</div>
 
 					<div class="mb-4">
-							<div class="d-flex justify-content-between align-items-center mb-2">
-								<label class="form-label fw-semibold mb-0">Seed Phrase</label>
-								<button class="btn btn-sm btn-outline-secondary" onClick={doGenerateNewSeed}>
-									Generate New
-								</button>
-							</div>
-							<div class="row g-2">
-								<Index each={seedWords()}>
-									{(word, index) => (
-										<div class="col-4 col-md-3">
-											<WordInput index={index} value={word} onInput={(v) => updateSeedWord(index, v)} checksumInvalid={() => checksumInvalid() && index === wordCount() - 1} />
-										</div>
-									)}
-								</Index>
-							</div>
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<label class="form-label fw-semibold mb-0">Seed Phrase</label>
+							<button class="btn btn-sm btn-outline-secondary" onClick={doGenerateNewSeed}>
+								Generate New
+							</button>
+						</div>
+						<div class="row g-2">
+							<Index each={seedWords()}>
+								{(word, index) => (
+									<div class="col-4 col-md-3">
+										<WordInput index={index} value={word} onInput={(v) => updateSeedWord(index, v)} checksumInvalid={() => checksumInvalid() && index === wordCount() - 1} />
+									</div>
+								)}
+							</Index>
+						</div>
 						<div class="mt-2">{isValidMnemonic() ? <span class="text-success small"> ✓ Valid seed phrase </span> : <span class="text-muted small"> Enter all words for a valid BIP-39 seed phrase </span>}</div>
 					</div>
 
