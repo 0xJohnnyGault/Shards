@@ -2,10 +2,14 @@
 	"name": "Shards - SSKR Seed Phrase Manager",
 	"short_name": "Shards",
 	"description": "Split and reconstruct BIP-39 seed phrases using Shamir Secret Sharing",
-	"start_url": "/",
+	"id": "./",
+	"start_url": "./",
+	"scope": "./",
 	"display": "standalone",
 	"background_color": "#0f0f17",
 	"theme_color": "#0f0f17",
+	"lang": "en-US",
+	"categories": ["security", "utilities", "crypto", "bitcoin", "ethereum"],
 	"icons": [
 		{
 			"src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>",
