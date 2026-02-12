@@ -78,6 +78,31 @@ a:hover {
 .app-footer {
 	border-top: 1px solid rgba(0, 212, 255, 0.12);
 	padding-top: 1.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+.app-footer-link {
+	display: inline-flex;
+	align-items: center;
+	color: inherit;
+	opacity: 0.85;
+	text-decoration: none;
+	transition:
+		color 0.2s ease,
+		opacity 0.2s ease;
+}
+.app-footer-link:hover,
+.app-footer-link:focus-visible {
+	color: var(--shards-accent);
+	opacity: 1;
+}
+.app-footer-github-icon {
+	width: 1.05rem;
+	height: 1.05rem;
+	display: block;
 }
 .text-accent {
 	color: var(--shards-accent);
