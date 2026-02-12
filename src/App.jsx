@@ -707,8 +707,6 @@ export default function App() {
 
 		const pageWidth = pdf.internal.pageSize.getWidth()
 		const pageHeight = pdf.internal.pageSize.getHeight()
-		const margin = 20
-		const contentWidth = pageWidth - margin * 2
 
 		for (let i = 0; i < sharesToInclude.length; i += 1) {
 			const share = sharesToInclude[i]
@@ -717,104 +715,197 @@ export default function App() {
 				pdf.addPage()
 			}
 
-			let yPos = margin
+			const drawRoundedRect = (x, y, w, h, radius, style) => {
+				if (typeof pdf.roundedRect === 'function') {
+					pdf.roundedRect(x, y, w, h, radius, radius, style)
+				} else {
+					pdf.rect(x, y, w, h, style)
+				}
+			}
 
-			pdf.setFontSize(24)
+			pdf.setFillColor(240, 244, 249)
+			pdf.rect(0, 0, pageWidth, pageHeight, 'F')
+
+			const card = { x: 8, y: 8, w: pageWidth - 16, h: pageHeight - 16 }
+			const contentX = card.x + 6
+			const contentW = card.w - 12
+			drawRoundedRect(card.x, card.y, card.w, card.h, 4, 'F')
+			pdf.setFillColor(255, 255, 255)
+			drawRoundedRect(card.x, card.y, card.w, card.h, 4, 'F')
+			pdf.setDrawColor(220, 226, 234)
+			drawRoundedRect(card.x, card.y, card.w, card.h, 4, 'S')
+
+			const headerY = card.y + 6
+			const headerH = 34
+			drawRoundedRect(contentX, headerY, contentW, headerH, 3, 'F')
+			pdf.setFillColor(14, 45, 84)
+			drawRoundedRect(contentX, headerY, contentW, headerH, 3, 'F')
+
+			const badgeText = `SHARD ${share.index}/${shares().length}`
+			pdf.setFillColor(35, 83, 138)
+			drawRoundedRect(contentX + 4, headerY + 4, 31, 8.5, 4, 'F')
 			pdf.setFont('helvetica', 'bold')
-			pdf.text('Shards Backup', pageWidth / 2, yPos, { align: 'center' })
-			yPos += 12
+			pdf.setTextColor(225, 240, 255)
+			pdf.setFontSize(7.8)
+			pdf.text(badgeText, contentX + 6, headerY + 9.5)
 
-			pdf.setFontSize(14)
+			pdf.setFontSize(14.5)
+			pdf.setTextColor(255, 255, 255)
+			pdf.text('Shards Backup Card', contentX + 6, headerY + 19.5)
+			pdf.setFontSize(8.8)
 			pdf.setFont('helvetica', 'normal')
-			pdf.text(`Shard ${share.index} of ${shares().length} — ${threshold()} threshold`, pageWidth / 2, yPos, { align: 'center' })
-			yPos += 15
+			const shardSetIdValue = shardSetId() || 'unknown'
+			pdf.text(`${threshold()} threshold - Shard Set ID: ${shardSetIdValue}`, contentX + 6, headerY + 25.5)
 
-			const shardSetIdValue = shardSetId()
-			if (shardSetIdValue) {
-				pdf.setFontSize(10)
-				pdf.setFont('helvetica', 'normal')
-				pdf.setTextColor(90, 90, 90)
-				pdf.text(`Shard Set ID: ${shardSetIdValue}`, pageWidth / 2, yPos, { align: 'center' })
-				pdf.setTextColor(0, 0, 0)
-				yPos += 8
-			}
+			const sidePanelW = 41
+			const sidePanelH = 24
+			const sidePanelX = contentX + contentW - sidePanelW - 4
+			const sidePanelY = headerY + 4
+			pdf.setFillColor(24, 63, 112)
+			drawRoundedRect(sidePanelX, sidePanelY, sidePanelW, sidePanelH, 2, 'F')
+			pdf.setFont('helvetica', 'bold')
+			pdf.setFontSize(6.6)
+			pdf.text('RECOVERY', sidePanelX + 3, sidePanelY + 6.5)
+			pdf.text('KEY SHARE', sidePanelX + 3, sidePanelY + 11.5)
+			pdf.setFont('helvetica', 'normal')
+			pdf.setFontSize(5.6)
+			pdf.setTextColor(192, 214, 239)
+			pdf.text('Print + store offline', sidePanelX + 3, sidePanelY + 18.5)
 
-			const qrSize = 80
-			const qrX = (pageWidth - qrSize) / 2
-			const rendered = await addSvgToPdf(pdf, share.qr, qrX, yPos, qrSize)
-			if (!rendered) {
-				const qrDataUrl = await svgToHighResDataUrl(share.qr, 800)
-				pdf.addImage(qrDataUrl, 'PNG', qrX, yPos, qrSize, qrSize)
-			}
-			yPos += qrSize + 10
+			const urTitleY = headerY + headerH + 9
+			pdf.setTextColor(55, 71, 89)
+			pdf.setFont('helvetica', 'bold')
+			pdf.setFontSize(8.8)
+			pdf.text('Encrypted UR Payload', contentX, urTitleY)
 
-			const publicNoteText = publicNote().trim()
-			if (publicNoteText) {
-				pdf.setFillColor(240, 240, 240)
-				pdf.rect(margin, yPos, contentWidth, 20, 'F')
-				pdf.setFontSize(10)
-				pdf.setFont('helvetica', 'bold')
-				pdf.text('Public Note:', margin + 5, yPos + 6)
-				pdf.setFont('helvetica', 'normal')
-				const noteLines = pdf.splitTextToSize(publicNoteText, contentWidth - 10)
-				pdf.text(noteLines, margin + 5, yPos + 12)
-				yPos += 25
-			}
+			const urBoxY = urTitleY + 3
+			const urBoxH = 34
+			pdf.setFillColor(247, 249, 252)
+			drawRoundedRect(contentX, urBoxY, contentW, urBoxH, 2, 'F')
+			pdf.setDrawColor(218, 225, 234)
+			drawRoundedRect(contentX, urBoxY, contentW, urBoxH, 2, 'S')
 
-			pdf.setFontSize(8)
+			pdf.setFontSize(7.2)
 			try {
 				pdf.setFont('RobotoMono', 'normal')
 			} catch {
 				pdf.setFont('courier', 'normal')
 			}
-			const charSpacing = 0.3
-			pdf.setCharSpace(charSpacing)
+			pdf.setTextColor(53, 63, 79)
 			const urText = share.ur.toUpperCase()
-			const avgCharsPerLine = 60
-			const spacingAdjustment = avgCharsPerLine * charSpacing
-			const urLines = pdf.splitTextToSize(urText, contentWidth - 6 - spacingAdjustment)
-			pdf.setFillColor(248, 249, 250)
-			const urHeight = urLines.length * 4 + 8
-			pdf.rect(margin, yPos, contentWidth, urHeight, 'F')
-			pdf.setDrawColor(200, 200, 200)
-			pdf.rect(margin, yPos, contentWidth, urHeight, 'S')
-			pdf.text(urLines, margin + 3, yPos + 5)
+			const urLineHeight = 3.1
+			const urCharSpacing = 0.15
+			pdf.setCharSpace(urCharSpacing)
+			const urLinesWidth = contentW - 8 - 52 * urCharSpacing
+			let urLines = pdf.splitTextToSize(urText, urLinesWidth)
+			const maxUrLines = Math.max(1, Math.floor((urBoxH - 8) / urLineHeight))
+			if (urLines.length > maxUrLines) {
+				urLines = urLines.slice(0, maxUrLines)
+				const lastLine = urLines[maxUrLines - 1]
+				urLines[maxUrLines - 1] = `${lastLine.slice(0, Math.max(0, lastLine.length - 3))}...`
+			}
+			pdf.text(urLines, contentX + 4, urBoxY + 6)
 			pdf.setCharSpace(0)
-			yPos += urHeight + 10
 
+			const qrTitleY = urBoxY + urBoxH + 10
+			pdf.setFont('helvetica', 'bold')
+			pdf.setFontSize(8.8)
+			pdf.setTextColor(55, 71, 89)
+			pdf.text('Shard QR', contentX, qrTitleY)
+
+			const qrPanelY = qrTitleY + 4
+			const qrPanelH = 101
+			pdf.setFillColor(245, 248, 252)
+			drawRoundedRect(contentX, qrPanelY, contentW, qrPanelH, 2.5, 'F')
+			pdf.setDrawColor(214, 223, 234)
+			drawRoundedRect(contentX, qrPanelY, contentW, qrPanelH, 2.5, 'S')
+
+			const qrCardSize = 88
+			const qrCardX = contentX + (contentW - qrCardSize) / 2
+			const qrCardY = qrPanelY + (qrPanelH - qrCardSize) / 2
+			pdf.setFillColor(255, 255, 255)
+			drawRoundedRect(qrCardX, qrCardY, qrCardSize, qrCardSize, 2, 'F')
+			pdf.setDrawColor(188, 203, 219)
+			drawRoundedRect(qrCardX, qrCardY, qrCardSize, qrCardSize, 2, 'S')
+
+			const qrSize = 76
+			const qrX = qrCardX + (qrCardSize - qrSize) / 2
+			const qrY = qrCardY + (qrCardSize - qrSize) / 2
+			const rendered = await addSvgToPdf(pdf, share.qr, qrX, qrY, qrSize)
+			if (!rendered) {
+				const qrDataUrl = await svgToHighResDataUrl(share.qr, 1024)
+				pdf.addImage(qrDataUrl, 'PNG', qrX, qrY, qrSize, qrSize)
+			}
+
+			const noteY = qrPanelY + qrPanelH + 5
+			const noteH = 16
+			const noteLabelW = 33
+			pdf.setFillColor(252, 246, 230)
+			drawRoundedRect(contentX, noteY, contentW, noteH, 2, 'F')
+			pdf.setDrawColor(231, 216, 174)
+			drawRoundedRect(contentX, noteY, contentW, noteH, 2, 'S')
+			pdf.setFont('helvetica', 'bold')
+			pdf.setFontSize(8)
+			pdf.setTextColor(151, 112, 32)
+			pdf.text('Public Note', contentX + 5, noteY + 6.3)
+			pdf.setFont('helvetica', 'normal')
+			pdf.setTextColor(93, 87, 78)
+			const noteValue = publicNote().trim() || 'None'
+			let noteLines = pdf.splitTextToSize(noteValue, contentW - noteLabelW - 10)
+			if (noteLines.length > 2) {
+				noteLines = noteLines.slice(0, 2)
+				const lastNoteLine = noteLines[1]
+				noteLines[1] = `${lastNoteLine.slice(0, Math.max(0, lastNoteLine.length - 3))}...`
+			}
+			pdf.setFontSize(7.2)
+			pdf.text(noteLines, contentX + noteLabelW, noteY + 5.8)
+
+			const appPanelY = noteY + noteH + 5
+			const appPanelH = 31
 			if (appUrl && appUrlQr) {
-				const footerY = pageHeight - margin
-				const appSectionHeight = 24
-				const appQrSize = 16
-				const appSectionY = footerY - appSectionHeight - 8
-				const appTextWidth = contentWidth - appQrSize - 14
-				const appQrX = margin + contentWidth - appQrSize - 4
-				const appQrY = appSectionY + (appSectionHeight - appQrSize) / 2
-
-				pdf.setFillColor(252, 252, 252)
-				pdf.rect(margin, appSectionY, contentWidth, appSectionHeight, 'F')
-				pdf.setDrawColor(220, 220, 220)
-				pdf.rect(margin, appSectionY, contentWidth, appSectionHeight, 'S')
-
-				pdf.setFontSize(9)
+				pdf.setFillColor(15, 44, 81)
+				drawRoundedRect(contentX, appPanelY, contentW, appPanelH, 2.2, 'F')
 				pdf.setFont('helvetica', 'bold')
-				pdf.text('Open Shards App:', margin + 4, appSectionY + 6)
-				pdf.setFontSize(8)
-				pdf.setFont('helvetica', 'normal')
-				const appUrlLines = pdf.splitTextToSize(appUrl, appTextWidth)
-				pdf.text(appUrlLines, margin + 4, appSectionY + 11)
+				pdf.setFontSize(8.9)
+				pdf.setTextColor(238, 246, 255)
+				pdf.text('Return to Shards Web App', contentX + 5, appPanelY + 7.3)
 
+				const appQrPanelSize = 21
+				const appQrPanelX = contentX + contentW - appQrPanelSize - 4
+				const appQrPanelY = appPanelY + (appPanelH - appQrPanelSize) / 2
+				pdf.setFillColor(255, 255, 255)
+				drawRoundedRect(appQrPanelX, appQrPanelY, appQrPanelSize, appQrPanelSize, 1.2, 'F')
+
+				const appQrSize = 16
+				const appQrX = appQrPanelX + (appQrPanelSize - appQrSize) / 2
+				const appQrY = appQrPanelY + (appQrPanelSize - appQrSize) / 2
 				const renderedAppQr = await addSvgToPdf(pdf, appUrlQr, appQrX, appQrY, appQrSize)
 				if (!renderedAppQr) {
 					const appQrDataUrl = await svgToHighResDataUrl(appUrlQr, 512)
 					pdf.addImage(appQrDataUrl, 'PNG', appQrX, appQrY, appQrSize, appQrSize)
 				}
+
+				const appTextWidth = contentW - appQrPanelSize - 12
+				pdf.setFont('helvetica', 'normal')
+				pdf.setFontSize(6.5)
+				const appUrlLines = pdf.splitTextToSize(appUrl, appTextWidth)
+				pdf.setTextColor(198, 220, 245)
+				pdf.text(appUrlLines, contentX + 5, appPanelY + 12.5)
+			} else {
+				pdf.setFillColor(238, 241, 246)
+				drawRoundedRect(contentX, appPanelY, contentW, appPanelH, 2.2, 'F')
+				pdf.setDrawColor(209, 218, 229)
+				drawRoundedRect(contentX, appPanelY, contentW, appPanelH, 2.2, 'S')
+				pdf.setFont('helvetica', 'normal')
+				pdf.setFontSize(7.2)
+				pdf.setTextColor(84, 95, 111)
+				pdf.text('Set VITE_APP_URL to include a return link and QR code.', contentX + 5, appPanelY + 11)
 			}
 
-			pdf.setFontSize(9)
-			pdf.setFont('helvetica', 'italic')
-			pdf.setTextColor(128, 128, 128)
-			pdf.text('Store this shard in a separate secure location', pageWidth / 2, pageHeight - margin, { align: 'center' })
+			pdf.setFontSize(6.8)
+			pdf.setFont('helvetica', 'normal')
+			pdf.setTextColor(111, 121, 134)
+			pdf.text('Store each shard in a separate secure location.', pageWidth / 2, card.y + card.h - 5, { align: 'center' })
 			pdf.setTextColor(0, 0, 0)
 		}
 
