@@ -13,6 +13,12 @@ A Progressive Web App for splitting and reconstructing BIP-39 seed phrases using
 - **Mobile-friendly** - responsive design with Bootstrap 5
 - **Blockchain Commons** - Uses well-documented specifications from [Blockchain Commons](https://developer.blockchaincommons.com) for long-term viability.
 
+## Screenshots
+
+![Home Page](./docs/screenshots/homepage.jpg)
+![Create shards flow](./docs/screenshots/create-shards.jpg)
+![Shard Card PDF](./docs/screenshots/shard-pdf.jpg)
+
 ## Envelope Structure
 
 Each shard is a [Gordian Envelope](https://developer.blockchaincommons.com/envelope/) with the following structure:
