@@ -27,8 +27,8 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
       qr:
-        specifier: 0.5.4
-        version: 0.5.4
+        specifier: 0.5.5
+        version: 0.5.5
       qr-scanner:
         specifier: 1.4.2
         version: 1.4.2
@@ -43,8 +43,8 @@ importers:
         specifier: npm:rolldown-vite@latest
         version: rolldown-vite@7.3.1
       vite-plugin-solid:
-        specifier: ^2.11.8
-        version: 2.11.10(rolldown-vite@7.3.1)(solid-js@1.9.11)
+        specifier: ^2.11.12
+        version: 2.11.12(rolldown-vite@7.3.1)(solid-js@1.9.11)
 
 packages:
 
@@ -609,8 +609,8 @@ packages:
   qr-scanner@1.4.2:
     resolution: {integrity: sha512-kV1yQUe2FENvn59tMZW6mOVfpq9mGxGf8l6+EGaXUOd4RBOLg7tRC83OrirM5AtDvZRpdjdlXURsHreAOSPOUw==}
 
-  qr@0.5.4:
-    resolution: {integrity: sha512-gjVMHOt7CX+BQd7JLQ9fnS4kJK4Lj4u+Conq52tcCbW7YH3mATTtBbTMA+7cQ1rKOkDo61olFHJReawe+XFxIA==}
+  qr@0.5.5:
+    resolution: {integrity: sha512-iQBvKj7MRKO+co+MY0IZpyLO+ezvttxsmV86WywrgPuAmgBkv0pytyi03wourniSoPgzffeBW6cBgIkpqcvjTg==}
     engines: {node: '>= 20.19.0'}
 
   raf@3.4.1:
@@ -733,12 +733,12 @@ packages:
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
-  vite-plugin-solid@2.11.10:
-    resolution: {integrity: sha512-Yr1dQybmtDtDAHkii6hXuc1oVH9CPcS/Zb2jN/P36qqcrkNnVPsMTzQ06jyzFPFjj3U1IYKMVt/9ZqcwGCEbjw==}
+  vite-plugin-solid@2.11.12:
+    resolution: {integrity: sha512-FgjPcx2OwX9h6f28jli7A4bG7PP3te8uyakE5iqsmpq3Jqi1TWLgSroC9N6cMfGRU2zXsl4Q6ISvTr2VL0QHpA==}
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
-      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@testing-library/jest-dom':
         optional: true
@@ -1305,7 +1305,7 @@ snapshots:
     dependencies:
       '@types/offscreencanvas': 2019.7.3
 
-  qr@0.5.4: {}
+  qr@0.5.5: {}
 
   raf@3.4.1:
     dependencies:
@@ -1416,7 +1416,7 @@ snapshots:
       base64-arraybuffer: 1.0.2
     optional: true
 
-  vite-plugin-solid@2.11.10(rolldown-vite@7.3.1)(solid-js@1.9.11):
+  vite-plugin-solid@2.11.12(rolldown-vite@7.3.1)(solid-js@1.9.11):
     dependencies:
       '@babel/core': 7.29.0
       '@types/babel__core': 7.20.5

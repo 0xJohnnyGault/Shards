@@ -459,6 +459,20 @@ a:hover {
 		text-align: center;
 	}
 }
+.form-check-input[type='checkbox'] {
+	background-color: rgba(255, 255, 255, 0.1);
+	border-color: rgba(160, 174, 192, 0.5);
+}
+.form-switch .form-check-input {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28160,174,192,0.8%29'/%3e%3c/svg%3e");
+}
+.form-check-input[type='checkbox']:checked {
+	background-color: var(--shards-accent);
+	border-color: var(--shards-accent);
+}
+.form-switch .form-check-input:checked {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
 .print-only {
 	display: none;
 }

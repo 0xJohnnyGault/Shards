@@ -7,13 +7,19 @@ if (typeof global === 'undefined') {
 }
 
 async function bootstrapApp() {
-	const { default: App } = await import('./App.js')
 	const root = document.getElementById('app')
 	if (!root) {
 		throw new Error('App container not found')
 	}
 	root.replaceChildren()
-	render(App, root)
+
+	if (location.hash.startsWith('#/pdf-preview/')) {
+		const { default: PdfPreview } = await import('./PdfPreview.jsx')
+		render(PdfPreview, root)
+	} else {
+		const { default: App } = await import('./App.js')
+		render(App, root)
+	}
 }
 
 bootstrapApp().catch((error) => {
