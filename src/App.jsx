@@ -268,24 +268,48 @@ export default function App() {
 		}
 	})
 
-	function goHome() {
-		setMode('home')
-		setError(null)
+	function clearSecrets() {
+		// Overwrite seed words array in place before replacing the signal
+		const oldWords = seedWords()
+		for (let i = 0; i < oldWords.length; i++) oldWords[i] = ''
+
+		// Overwrite share UR strings in place before replacing the signal
+		for (const share of shares()) {
+			if (share.ur) share.ur = ''
+			if (share.qr) share.qr = ''
+		}
+
+		// Overwrite input share strings in place
+		const oldInputs = inputShares()
+		for (let i = 0; i < oldInputs.length; i++) oldInputs[i] = ''
+
+		// Overwrite reconstructed data fields
+		const rd = reconstructedData()
+		if (rd) {
+			if (rd.mnemonic) rd.mnemonic = ''
+			if (rd.secretText) rd.secretText = ''
+			if (rd.privateNote) rd.privateNote = ''
+		}
+
+		setSeedWords(Array(wordCount()).fill(''))
 		setShares([])
-		setShardSetId(null)
-		setShardSetTimestamp(null)
-		setReconstructedData(null)
 		setInputShares(['', ''])
-		setIncludeSeed(true)
-		setIncludeSecretText(false)
+		setReconstructedData(null)
 		setPublicNote('')
 		setPrivateNote('')
 	}
 
+	function goHome() {
+		clearSecrets()
+		setMode('home')
+		setError(null)
+		setShardSetId(null)
+		setShardSetTimestamp(null)
+		setIncludeSeed(true)
+		setIncludeSecretText(false)
+	}
+
 	function doDoneFromShares() {
-		setSeedWords(Array(wordCount()).fill(''))
-		setPublicNote('')
-		setPrivateNote('')
 		goHome()
 	}
 
@@ -318,11 +342,14 @@ export default function App() {
 		const input = `${seedPhrase}|${unixTimestamp}`
 		const bytes = new TextEncoder().encode(input)
 		const hashBuffer = await subtle.digest('SHA-256', bytes)
+		bytes.fill(0)
 		const hashBytes = new Uint8Array(hashBuffer)
 		const tail = hashBytes.slice(-3)
-		return Array.from(tail)
+		const result = Array.from(tail)
 			.map((byte) => byte.toString(16).padStart(2, '0'))
 			.join('')
+		hashBytes.fill(0)
+		return result
 	}
 
 	async function doCreateShards() {
@@ -339,9 +366,10 @@ export default function App() {
 				return
 			}
 
+			let entropy
 			let envelope
 			if (includeSeed()) {
-				const entropy = bip39.mnemonicToEntropy(mnemonic(), wordlist)
+				entropy = bip39.mnemonicToEntropy(mnemonic(), wordlist)
 				envelope = Envelope.new(entropy)
 				const secretText = includeSecretText() ? privateNote().trim() : ''
 				if (secretText) {
@@ -353,6 +381,8 @@ export default function App() {
 
 			const contentKey = SymmetricKey.new()
 			const encrypted = envelope.wrap().encryptSubject(contentKey)
+			envelope = null
+			if (entropy) entropy.fill(0)
 
 			const [t, n] = threshold() === '2-of-3' ? [2, 3] : [3, 5]
 			const groupSpec = SSKRGroupSpec.new(t, n)
@@ -481,6 +511,7 @@ export default function App() {
 			try {
 				const entropy = subjectEnvelope.extractBytes()
 				recoveredMnemonic = bip39.entropyToMnemonic(entropy, wordlist)
+				entropy.fill(0)
 
 				try {
 					const privateNoteObj = inner.objectForPredicate(NOTE)

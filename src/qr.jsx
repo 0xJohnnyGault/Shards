@@ -48,6 +48,7 @@ export function QRScanner(props) {
 	let isActive = true
 
 	function stopScanner() {
+		scannedData = null
 		if (!scanner) return
 		try {
 			scanner.stop().catch(() => {})
