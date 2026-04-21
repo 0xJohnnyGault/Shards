@@ -219,7 +219,7 @@ export class ShardsPdfBuilder {
 
 			pdf.setFontSize(14.5)
 			pdf.setTextColor(...colors.headerText)
-			pdf.text(`Shard ${i + 1} of ${this.shares.length}`, contentX + 6, headerY + 10.5)
+			pdf.text(`Shard ${share.index}`, contentX + 6, headerY + 10.5)
 			pdf.setFontSize(8.8)
 			pdf.setFont('helvetica', 'normal')
 			const shardSetIdValue = this.shardSetId || 'unknown'
