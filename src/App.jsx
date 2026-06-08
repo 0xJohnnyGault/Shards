@@ -5,6 +5,7 @@ import { Envelope, SymmetricKey, NOTE } from '@bcts/envelope'
 import { SSKRSpec, SSKRGroupSpec } from '@bcts/components'
 import { ShardsPdfBuilder } from './pdf.js'
 import { generateQRCode, QrCodeSvg, QRScanner } from './qr.jsx'
+import { reconstructShares } from './reconstruct.js'
 
 const APP_ICON_SRC = `${import.meta.env.BASE_URL}app-icon.svg`
 const GITHUB_REPO_URL = 'https://github.com/0xJohnnyGault/Shards'
@@ -411,6 +412,7 @@ export default function App() {
 			setShardSetTimestamp(unixTimestamp)
 			setShares(sharesWithQR)
 			setMode('shares')
+			void doDownloadRecoveryHtml()
 		} catch (err) {
 			setError('Failed to create shards: ' + err.message)
 		}
@@ -482,55 +484,29 @@ export default function App() {
 		window.open(location.pathname + hash, '_blank')
 	}
 
+	async function doDownloadRecoveryHtml() {
+		try {
+			const response = await fetch(`${import.meta.env.BASE_URL}recovery.html`)
+			if (!response.ok) {
+				throw new Error(`download returned ${response.status}`)
+			}
+			const blob = await response.blob()
+			const url = URL.createObjectURL(blob)
+			const anchor = document.createElement('a')
+			anchor.href = url
+			anchor.download = `shards-${shardSetId() || 'recovery'}-recovery.html`
+			anchor.click()
+			setTimeout(() => URL.revokeObjectURL(url), 0)
+		} catch (err) {
+			setError(`Shards were created, but the offline recovery page could not be downloaded: ${err.message}`)
+		}
+	}
+
 	async function doReconstructSeed() {
 		try {
 			setError(null)
 			setReconstructedData(null)
-			const shareTexts = inputShares().filter((s) => s.trim().length > 0)
-
-			if (shareTexts.length < 2) {
-				setError('Please enter at least 2 shares')
-				return
-			}
-
-			const shareEnvelopes = shareTexts.map((text) => {
-				const trimmed = text.trim().toLowerCase()
-				return Envelope.fromUrString(trimmed)
-			})
-
-			const wrapped = Envelope.sskrJoin(shareEnvelopes)
-			const inner = wrapped.unwrap()
-
-			const subjectEnvelope = inner.subject()
-
-			// Try extracting bytes (seed phrase case) first, fall back to string (text-only case)
-			let recoveredMnemonic = null
-			let recoveredSecretText = null
-			let recoveredPrivateNote = null
-
-			try {
-				const entropy = subjectEnvelope.extractBytes()
-				recoveredMnemonic = bip39.entropyToMnemonic(entropy, wordlist)
-				entropy.fill(0)
-
-				try {
-					const privateNoteObj = inner.objectForPredicate(NOTE)
-					if (privateNoteObj) {
-						recoveredPrivateNote = privateNoteObj.extractString()
-					}
-				} catch {
-					// No private note
-				}
-			} catch {
-				// No seed entropy — subject is secret text
-				recoveredSecretText = subjectEnvelope.extractString()
-			}
-
-			setReconstructedData({
-				mnemonic: recoveredMnemonic,
-				secretText: recoveredSecretText,
-				privateNote: recoveredPrivateNote,
-			})
+			setReconstructedData(reconstructShares(inputShares()))
 		} catch (err) {
 			setError('Failed to reconstruct: ' + err.message)
 		}
@@ -792,6 +768,9 @@ export default function App() {
 					<div class="print-only print-footer">Created with Shards - Store each shard in a separate secure location</div>
 
 					<div class="mt-4 text-center no-print">
+						<button class="btn btn-outline-secondary me-2" onClick={doDownloadRecoveryHtml}>
+							Save Recovery HTML
+						</button>
 						<button class="btn btn-outline-secondary me-2" onClick={doGeneratePDF}>
 							Save PDF
 						</button>

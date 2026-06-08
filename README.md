@@ -9,6 +9,7 @@ A Progressive Web App for splitting and reconstructing BIP-39 seed phrases using
 - **Private notes** - encrypted with the seed, only revealed after reconstruction
 - **QR code generation** for each shard using UR (Uniform Resource) encoding
 - **QR code scanning** to import shards via camera
+- **Standalone recovery page** downloaded with each shard set for offline reconstruction
 - **Offline-capable** - works without internet after initial load
 - **Mobile-friendly** - responsive design with Bootstrap 5
 - **Blockchain Commons** - Uses well-documented specifications from [Blockchain Commons](https://developer.blockchaincommons.com) for long-term viability.
@@ -86,7 +87,8 @@ pnpm run preview
 4. Optionally add a public note (visible on each shard)
 5. Optionally add a private note (encrypted, revealed after reconstruction)
 6. Click "Create Shards"
-7. Save each shard's QR code or UR string separately
+7. Store the downloaded standalone recovery HTML page
+8. Save each shard's QR code or UR string separately
 
 ### Reconstructing Seed
 
@@ -94,6 +96,8 @@ pnpm run preview
 2. Either paste the UR string or scan the QR code for each shard
 3. Click "Reconstruct Seed"
 4. View your recovered seed phrase and any notes
+
+The standalone recovery HTML page contains the reconstruction code and styles in one file. It does not contain any shard data and can be opened offline.
 
 ## Security Considerations
 
