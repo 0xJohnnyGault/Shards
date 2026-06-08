@@ -42,7 +42,7 @@ jobs:
       - name: Build site
         env:
           VITE_APP_URL: https://0xjohnnygault.github.io/Shards/
-        run: pnpm build --base "/${{ github.event.repository.name }}/"
+        run: pnpm build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

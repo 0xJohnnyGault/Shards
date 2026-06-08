@@ -5,6 +5,7 @@ import solid from 'vite-plugin-solid'
 const BUILD_ID = process.env.GITHUB_SHA?.slice(0, 12) ?? `${Date.now()}`
 
 export default defineConfig({
+	base: './',
 	plugins: [solid()],
 	define: {
 		global: 'globalThis',
