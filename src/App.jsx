@@ -486,7 +486,7 @@ export default function App() {
 
 	async function doDownloadRecoveryHtml() {
 		try {
-			const response = await fetch(`${import.meta.env.BASE_URL}recovery.html`)
+			const response = await fetch(`${import.meta.env.BASE_URL}ShardsOfflineRecovery.html`)
 			if (!response.ok) {
 				throw new Error(`download returned ${response.status}`)
 			}

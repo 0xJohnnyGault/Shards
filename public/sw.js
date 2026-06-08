@@ -6,7 +6,7 @@ const APP_SHELL = `${BASE_PATH}index.html`
 const PRECACHE_ASSETS = [
 	BASE_PATH,
 	APP_SHELL,
-	`${BASE_PATH}recovery.html`,
+	`${BASE_PATH}ShardsOfflineRecovery.html`,
 	`${BASE_PATH}fonts/RobotoMono-Regular.ttf`,
 	`${BASE_PATH}manifest.json`,
 	`${BASE_PATH}app-icon.svg`,

@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
+import purgecss from '@fullhuman/postcss-purgecss'
 
 function inlineRecoveryPage() {
 	return {
@@ -28,7 +29,7 @@ function inlineRecoveryPage() {
 			}
 
 			htmlAsset.source = html
-			htmlAsset.fileName = 'recovery.html'
+			htmlAsset.fileName = 'ShardsOfflineRecovery.html'
 		},
 	}
 }
@@ -38,6 +39,19 @@ export default defineConfig({
 	plugins: [inlineRecoveryPage()],
 	define: {
 		global: 'globalThis',
+	},
+	css: {
+		postcss: {
+			plugins: [
+				purgecss({
+					content: [path.resolve(__dirname, 'recovery.html'), path.resolve(__dirname, 'src/**/*.js')],
+					defaultExtractor: (content) => content.match(/[\w-/:%.]+(?<!:)/g) ?? [],
+					safelist: {
+						standard: ['html', 'body'],
+					},
+				}),
+			],
+		},
 	},
 	resolve: {
 		alias: {

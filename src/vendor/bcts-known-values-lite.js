@@ -181,6 +181,11 @@ export class KnownValuesStore {
 	}
 }
 
+export const IS_A_RAW = 1n
+export const SOURCE_RAW = 702n
+export const TARGET_RAW = 703n;
+export const PARENT_RAW = 704n;
+export const CHILD_RAW = 705n;
 export const UNIT = new KnownValue(0, '')
 export const IS_A = new KnownValue(1, 'isA')
 export const SIGNED = new KnownValue(3, 'signed')
