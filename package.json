@@ -23,10 +23,5 @@
   "devDependencies": {
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-solid": "^2.11.12"
-  },
-  "aube": {
-    "allowBuilds": {
-      "core-js": "set this to true or false"
-    }
   }
 }
